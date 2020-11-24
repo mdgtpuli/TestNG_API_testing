@@ -26,7 +26,3 @@ public class GetBookingIdsTest {
         Assert.assertFalse(bookingIds.isEmpty(), "List of booking ids should NOT be empty");
     }
 }
-
-//get booking
-//use from 1-10 for the test
-//Verifications: 200, correct information : first name and last name

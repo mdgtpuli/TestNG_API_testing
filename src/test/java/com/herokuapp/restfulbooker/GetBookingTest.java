@@ -5,17 +5,33 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
-import java.util.List;
 
-public class GetBookingTest {
+public class GetBookingTest extends BaseTest{
+
+    //To avoid the test failing due to changes in the data, we are creating our own record
+    // before getting the details using the endpoint
 
     @Test
     public void getBookingById() {
-        String bookingId = "2";
-        String expectedName = "Eric";
-        String expectedSurname = "Ericsson";
+
+        //expected values
+        String expectedFirstName= "Puli";
+        String expectedLastName= "GT";
+        Integer expectedTotalPrice = 120;
+        boolean expectedDeposit = true;
+        String expectedCheckin = "2020-11-28";
+        String expectedCheckout = "2020-11-30";
+        String expectedAdditionalNeeds = "spa";
+
+        Response response = createBooking(expectedFirstName, expectedLastName, expectedTotalPrice, expectedDeposit,
+                expectedCheckin, expectedCheckout, expectedAdditionalNeeds );
+        response.print();
+
+        String bookingId = response.jsonPath().get("bookingid").toString();
         String URL = "https://restful-booker.herokuapp.com/booking/" + bookingId;
+        System.out.println("URL: " + URL);
 
         //get booking
         //use from 1-10 for the test
@@ -23,14 +39,19 @@ public class GetBookingTest {
         response1.print();
 
         //Verifications: 200
-        Assert.assertEquals(response1.getStatusCode(), 200,
+        SoftAssert soft = new SoftAssert();
+        soft.assertEquals(response1.getStatusCode(), 200,
                 "Status code of the response is expected to be 200");
 
         // Verification - correct information : first name and last name
-        Assert.assertEquals(response1.jsonPath().get("firstname"), expectedName,
-                "Name does not match the expected value: " + expectedName);
-        Assert.assertEquals(response1.jsonPath().get("lastname"), expectedSurname,
-                "Surname does not match the expected value: " + expectedSurname);
+        soft.assertEquals(response1.jsonPath().get("firstname"), expectedFirstName,
+                "Name does not match the expected value: " + expectedLastName);
+        soft.assertEquals(response1.jsonPath().get("lastname"), expectedLastName,
+                "Surname does not match the expected value: " + expectedLastName);
+        soft.assertEquals(response1.jsonPath().get("totalprice"), expectedTotalPrice,
+                "Surname does not match the expected value: " + expectedTotalPrice);
+
+        soft.assertAll();
     }
 }
 
