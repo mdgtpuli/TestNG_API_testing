@@ -3,7 +3,6 @@ package com.herokuapp.restfulbooker;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
@@ -29,13 +28,14 @@ public class GetBookingTest extends BaseTest{
                 expectedCheckin, expectedCheckout, expectedAdditionalNeeds );
         response.print();
 
-        String bookingId = response.jsonPath().get("bookingid").toString();
-        String URL = "https://restful-booker.herokuapp.com/booking/" + bookingId;
-        System.out.println("URL: " + URL);
+        //Set path parameter with the recently created bookingId
+        request.pathParam("bookingid", response.jsonPath().get("bookingid").toString());
+        String endpoint = "/booking/{bookingid}";
 
         //get booking
         //use from 1-10 for the test
-        Response response1 = RestAssured.get(URL);
+        Response response1 = RestAssured.given(request).get(endpoint);
+
         response1.print();
 
         //Verifications: 200

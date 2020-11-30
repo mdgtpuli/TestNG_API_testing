@@ -50,10 +50,10 @@ public class UpdateBookingTest extends BaseTest{
         body.put("additionalneeds", expectedAdditionalNeeds);
 
         //Update booking
-        Response response = RestAssured.given()
+        Response response = RestAssured.given(request)
                 .auth().preemptive().basic("admin", "password123")
                 .contentType(ContentType.JSON).body(body.toString())
-                .put("https://restful-booker.herokuapp.com/booking/" + bookingid);
+                .put("/booking/" + bookingid);
 
         response.print();
 

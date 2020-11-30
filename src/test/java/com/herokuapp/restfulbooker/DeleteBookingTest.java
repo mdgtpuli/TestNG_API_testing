@@ -43,7 +43,7 @@ public class DeleteBookingTest extends BaseTest{
         Assert.assertEquals(deleteResponse.getStatusCode(), 201, "Status code was not 201, as expected");
 
         //Get inesistend bookingId
-        Response getBookingId = RestAssured.get("https://restful-booker.herokuapp.com/booking/" + bookingid);
+        Response getBookingId = RestAssured.given(request).get("/booking/" + bookingid);
 
         //Verify that the system does not find the booking
         Assert.assertEquals(getBookingId.statusCode(), 404, "The getBookingId response is not 404, as expected");

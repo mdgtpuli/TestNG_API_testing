@@ -10,12 +10,16 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class GetBookingIdsTest {
+public class GetBookingIdsTest extends BaseTest {
 
     @Test
     public void getBookingIdsWithoutFilter() {
+
         //Get response with booking ids
-        Response response = RestAssured.get("https://restful-booker.herokuapp.com/booking");
+        Response response = RestAssured
+                .given(request)
+                .get("/booking");
+
         response.print();
 
         //Verify that the response is 200
