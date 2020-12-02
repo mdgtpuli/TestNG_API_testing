@@ -4,15 +4,15 @@ package com.herokuapp.restfulbooker;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
 
+
 public class CreateBookingTest  extends BaseTest{
 
-    @Test
+    @Test(enabled=false)
     public void createBookingTest(){
         //expected values
         String expectedFirstName= "Puli";
@@ -53,6 +53,39 @@ public class CreateBookingTest  extends BaseTest{
                 "additionalneeds was not as expected");
 
         soft.assertAll();
+
+    }
+
+    @Test
+    public void createBookingTest2(){
+
+        //expected values
+        String expectedFirstName= "Puli";
+        String expectedLastName= "GT";
+        int expectedTotalPrice = 120;
+        boolean expectedDeposit = true;
+        String expectedCheckin = "2020-11-28";
+        String expectedCheckout = "2020-11-30";
+        String expectedAdditionalNeeds = "spa";
+
+      //Create body -POJO
+        Bookingdates bookingdates = new Bookingdates(expectedCheckin, expectedCheckout);
+        Booking body = new Booking(expectedFirstName, expectedLastName, expectedTotalPrice,
+                expectedDeposit, bookingdates, expectedAdditionalNeeds);
+
+        //Post response
+        Response response = RestAssured.given(request).contentType(ContentType.JSON).body(body)
+                .post("/booking");
+        response.print();
+
+        //Map response to BookingId object
+        BookingId bookingIdResponse = response.as(BookingId.class);
+
+        //Verifications - Assert that both objects are equal
+         System.out.println("Request: " + body.toString());
+         System.out.println("Response: " + bookingIdResponse.getBooking().toString());
+
+         Assert.assertEquals(bookingIdResponse.getBooking().toString(), body.toString());
 
     }
 }
